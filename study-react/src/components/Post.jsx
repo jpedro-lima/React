@@ -1,5 +1,7 @@
 import styles from './Post.module.css';
 
+import { Comment } from './Comment.jsx'
+
 import avatar from '../assets/rabbit.jpeg';
 
 export function Post() {
@@ -41,6 +43,12 @@ export function Post() {
 					<button type='submit'>Comentar</button>
 				</footer>
 			</form>
+
+			<div className={styles.commentList}>
+				<Comment/>
+				<Comment/>
+				
+			</div>
 		</article>
 	);
 }
