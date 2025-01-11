@@ -1,4 +1,5 @@
 import styles from './Sidebar.module.css';
+
 import { PencilSimpleLine } from 'phosphor-react'
 
 import avatar from '../assets/rabbit.jpeg';
