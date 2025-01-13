@@ -9,12 +9,9 @@ import { useState } from 'react';
 export function Post({ author, publishedAt, content }) {
 	const formattedDate = format(publishedAt, "dd 'de' LLLL 'às' HH:mm'h'", { locale: ptBR });
 	const relativeDate = formatDistance(publishedAt, new Date(), { locale: ptBR, addSuffix: true });
-
+	
 	const [comments, setComment] = useState([
-		{
-			id: 1,
-			content: 'Imagine um excelente comentário aqui!',
-		}
+		'Imagine um excelente comentário aqui!',
 	])
 
 	const [newCommentText, setNewCommentText] = useState('');
@@ -22,17 +19,30 @@ export function Post({ author, publishedAt, content }) {
 	function hundleCreateNewComment() {
 		event.preventDefault();
 
-		setComment([...comments, { id: comments.length + 1, content: newCommentText }]);
+		setComment([...comments, newCommentText ]);
 		setNewCommentText('');
+		
+		{ 
+			const newComment = document.querySelector('textarea[name="comment"]');
+			newComment.scrollIntoView({ behavior: 'smooth' });
+			
+			document.activeElement.blur()
+		}
 	}
 
 	function handleNewCommentChange() {
+		event.target.setCustomValidity('');
 		setNewCommentText(event.target.value);
 	}
 
-	function onDeleteComment( comment ) {
-		comments.splice( comments.indexOf( comment ), 1 );
-		setComment([...comments]);
+	function deleteComment( commentToDelete ) {
+
+		const commentWithoutDeletedOne = comments.filter(comment => comment !== commentToDelete);
+		setComment([...commentWithoutDeletedOne]);
+	}
+
+	function hundleNewInvalidComment() {
+		event.target.setCustomValidity('Por favor, preencha o campo de comentário');
 	}
 
 	return (
@@ -77,18 +87,20 @@ export function Post({ author, publishedAt, content }) {
 					name='comment'
 					placeholder='Deixe seu comentario'
 					onChange={handleNewCommentChange}
-					value={newCommentText}	
+					value={newCommentText}
+					onInvalid={hundleNewInvalidComment}
+					required
 				>
 				</textarea>
 
 				<footer>
-					<button type='submit'>Comentar</button>
+					<button type='submit' disabled={newCommentText.length === 0}>Comentar</button>
 				</footer>
 			</form>
 
 			<div className={styles.commentList}>
 				{ comments.map(comment => {
-					return <Comment key={comment.content} content={comment.content} onDeleteComment={onDeleteComment} />
+					return <Comment key={comment} content={comment} onDeleteComment={deleteComment} />
 				}) }
 				
 			</div>
