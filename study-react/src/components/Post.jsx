@@ -30,6 +30,11 @@ export function Post({ author, publishedAt, content }) {
 		setNewCommentText(event.target.value);
 	}
 
+	function onDeleteComment( comment ) {
+		comments.splice( comments.indexOf( comment ), 1 );
+		setComment([...comments]);
+	}
+
 	return (
 		<article className={styles.post}>
 			<header>
@@ -83,7 +88,7 @@ export function Post({ author, publishedAt, content }) {
 
 			<div className={styles.commentList}>
 				{ comments.map(comment => {
-					return <Comment key={comment.content} content={comment.content} />
+					return <Comment key={comment.content} content={comment.content} onDeleteComment={onDeleteComment} />
 				}) }
 				
 			</div>
