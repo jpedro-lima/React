@@ -1,43 +1,80 @@
 import styles from './Post.module.css';
 
+import { format, formatDistance } from 'date-fns';
+import { ptBR } from 'date-fns/locale/pt-BR';
+
 import { Comment } from './Comment.jsx'
+import { useState } from 'react';
 
-import avatar from '../assets/rabbit.jpeg';
+export function Post({ author, publishedAt, content }) {
+	const formattedDate = format(publishedAt, "dd 'de' LLLL 'às' HH:mm'h'", { locale: ptBR });
+	const relativeDate = formatDistance(publishedAt, new Date(), { locale: ptBR, addSuffix: true });
 
-export function Post() {
+	const [comments, setComment] = useState([
+		{
+			id: 1,
+			content: 'Imagine um excelente comentário aqui!',
+		}
+	])
+
+	const [newCommentText, setNewCommentText] = useState('');
+
+	function hundleCreateNewComment() {
+		event.preventDefault();
+
+		setComment([...comments, { id: comments.length + 1, content: newCommentText }]);
+		setNewCommentText('');
+	}
+
+	function handleNewCommentChange() {
+		setNewCommentText(event.target.value);
+	}
+
 	return (
 		<article className={styles.post}>
 			<header>
 				<div className={styles.author}>
-					<img src={avatar} alt="author avatar" />
+					<img src={author.avatarUrl} alt="author avatar" />
 					<div className={styles.authorInfo}>
-						<strong>Tu Shen</strong>
-						<span>Espírito Coelho</span>
+						<strong>{author.name}</strong>
+						<span>{author.role}</span>
 					</div>
 				</div>
 
-				<time title='13 de Dezembro de 2024' datetime='2024-12-13 10:00:00'>
-						Publicado há 1h
-					</time>
+				<time title={formattedDate} dateTime={publishedAt.toISOString()}>
+					{relativeDate}
+				</time>
 			</header>
 
 			<div className={styles.content}>
-				<p>Olá, bem-vindo ao meu post!</p>
-				
-				<p>Estou muito feliz em compartilhar este conteúdo com você. Espero que você goste e aproveite a leitura!</p>
+				{ content.map((line) => {
 
-				<p>Eu sou Tu Shen, também conhecido como Espírito Coelho. Sou apaixonado por tecnologia e desenvolvimento de software. Adoro aprender coisas novas e compartilhar meu conhecimento com os outros.</p>
-
-			<p>
-				<a href="">#firstPost</a>{' '}
-				<a href="">#study</a>{' '}
-				<a href="">#react</a>{' '}
-			</p>
+					switch (line.type) {
+						case 'paragraph':
+							return <p key={line.content}>{line.content}</p>;
+						case 'link':
+							return <p key={line.content}><a target='_blank' href={ line.url }>{ line.content }</a></p>;
+						case 'tags':
+							return (
+								<p key={line.tags}>{
+									line.tags.map(tag => {
+										return <a key={tag} target='_blank' href='#'>#{tag}</a>;
+									})
+								}</p>
+							);
+					}
+				})}
 			</div>
 
-			<form className={styles.commentForm}>
+			<form onSubmit={hundleCreateNewComment} className={styles.commentForm}>
 				<strong>Deixe seu feedback!</strong>
-				<textarea placeholder='Deixe seu comentario'></textarea>
+				<textarea
+					name='comment'
+					placeholder='Deixe seu comentario'
+					onChange={handleNewCommentChange}
+					value={newCommentText}	
+				>
+				</textarea>
 
 				<footer>
 					<button type='submit'>Comentar</button>
@@ -45,8 +82,9 @@ export function Post() {
 			</form>
 
 			<div className={styles.commentList}>
-				<Comment/>
-				<Comment/>
+				{ comments.map(comment => {
+					return <Comment key={comment.content} content={comment.content} />
+				}) }
 				
 			</div>
 		</article>

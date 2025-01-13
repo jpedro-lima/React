@@ -65,6 +65,14 @@
 	color: var(--green-300);
 }
 
+.content a:link {
+	text-decoration: none;
+}
+
+.content a::after {
+	content: " ";
+}
+
 .commentForm {
 	width: 100%;
 	margin-top: 1.5rem;
@@ -116,8 +124,4 @@
 
 .commentForm button[type="submit"]:hover {
 	background: var(--green-300);
-}
-
-.commentList {
-	margin-top: 2rem;
 }

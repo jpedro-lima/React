@@ -1,10 +1,10 @@
 import styles from './Comment.module.css';
 
-import avatar from '../assets/rabbit.jpeg';
+import avatar from '../assets/tushen.jpeg';
 
 import { Trash, ThumbsUp } from 'phosphor-react';
 
-export function Comment() {
+export function Comment({ content }) {
 	return (
 		<div className={styles.comment}>
 			<img src={avatar} alt="author avatar" />
@@ -17,7 +17,7 @@ export function Comment() {
 				
 						<div className={styles.authorAndTime}>
 							<strong>Tu Shen</strong>
-							<time title='11 de Maio às 08:13h' datetime="2022-05-11 08:13:38">Cerca de 1h atrás</time>
+							<time title='11 de Maio às 08:13h' dateTime="2022-05-11 08:13:38">Cerca de 1h atrás</time>
 						</div>
 
 						<button title='Deletar Comentário'>
@@ -25,7 +25,7 @@ export function Comment() {
 						</button>
 					</header>
 
-					<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione, voluptatibus.</p>
+					<p>{content}</p>				
 				
 				</div>
 
