@@ -1,8 +1,8 @@
 import styles  from './App.module.css'
 
-import {  } from   ;
+import { Header } from  './components/Header.tsx';
 
-function App() {
+export default function App() {
   return (
     <>
       <Header />
@@ -13,5 +13,3 @@ function App() {
     </>
   )
 }
-
-export default App
