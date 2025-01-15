@@ -1,30 +1,13 @@
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
-import { Post } from './components/Post'
+import { Post , PostType} from './components/Post'
 
 import styles from './App.module.css'
 
 import avatarTuShen from './assets/tushen.jpeg'
 import avatarXiwangmu from './assets/xiwangmu.jpg'
 
-
-interface PostProps {
-	id: number,
-	publishedAt: Date,
-	author: {
-		name: string,
-		avatarUrl: string,
-		role: string,
-	},
-	content: {
-		type: string,
-		content?: string,
-		tags?: string[],
-		url?: string
-	}[]
-}
-
-const posts: PostProps[] = [
+const posts: PostType[] = [
 	{
 		id: 1,
 		publishedAt: new Date('2024-11-13 13:25:00'),

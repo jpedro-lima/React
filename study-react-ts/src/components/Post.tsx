@@ -6,7 +6,8 @@ import { ptBR } from 'date-fns/locale/pt-BR';
 import { Comment } from './Comment.jsx'
 import { ChangeEvent, FormEvent, InvalidEvent, useState } from 'react';
 
-interface PostProps {
+export interface PostType {
+	id?: number,
 	publishedAt: Date,
 	author: {
 		name: string,
@@ -21,7 +22,7 @@ interface PostProps {
 	}[]
 }
 
-export function Post({ author, publishedAt, content }: PostProps) {
+export function Post({ author, publishedAt, content }: PostType) {
 	const formattedDate = format(publishedAt, "dd 'de' LLLL 'às' HH:mm'h'", { locale: ptBR });
 	const relativeDate = formatDistance(publishedAt, new Date(), { locale: ptBR, addSuffix: true });
 	
