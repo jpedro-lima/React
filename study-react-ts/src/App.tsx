@@ -43,7 +43,7 @@ const posts: PostType[] = [
 
 function App() {
 	return (
-		<div>
+		<>
 			<Header />
 			<div className={styles.wrapper}>
 				<Sidebar />
@@ -60,9 +60,8 @@ function App() {
 					})}
 
 				</main>
-
 			</div>
-		</div>
+		</>
 	)
 }
 
