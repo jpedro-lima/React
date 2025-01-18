@@ -1,0 +1,73 @@
+
+header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+
+	margin-bottom: 1.5rem;
+}
+
+header h1{
+	font-size: 1.5rem;
+	color: var(--blue-dark);
+
+}
+
+header span {
+	font-size: 0.85rem;
+	color: var(--gray-200);
+	background-color: var(--gray-400);
+
+	padding: 0.25rem 0.7rem;
+	border-radius: 45%;
+
+	margin-left: 1rem;
+}
+
+.board {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	width: 100%;
+	height: 30rem;
+
+
+	border: 1px solid var(--gray-400);
+	border-radius: 10px;
+
+	padding: 1rem;
+}
+
+.empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+	height: 100%;
+}
+
+.empty .square {
+	width: 6.25rem;
+	height: 6.25rem;
+
+	border: 2px dashed var(--gray-300);
+
+	margin-bottom: 1rem;
+}
+
+.empty img {
+	margin: 1rem 0;
+}
+
+.empty p {
+	font-size: 1rem;
+	color: var(--gray-300);
+	text-align: center;
+
+	margin-bottom: 1rem;
+}
