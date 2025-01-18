@@ -15,6 +15,9 @@
   --purple: #8284fa;
   --purple-dark: #5e60ce;
 
+	--red-brick: #c2294e;
+	--jaffar: #c23829;
+
   --danger: #e25858;
 }
 
@@ -32,4 +35,9 @@ body {
 
 body, input, textarea, button {
 	font: 400 1rem Inter, sans-serif;
+}
+
+:focus {
+	outline: transparent;
+	box-shadow: 0 0 0 2px var(--jaffar);
 }
