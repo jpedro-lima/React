@@ -19,10 +19,10 @@
 	font-weight: bold;
 }
 
-.blue {
-	color: var(--blue);
+.redBrick {
+	color: var(--red-brick);
 }
 
-.purple {
-	color: var(--purple);
+.blueDark {
+	color: var(--blue-dark);
 }
