@@ -1,15 +1,12 @@
-import styles  from './App.module.css'
-
-import { Header } from  './components/Header.tsx';
+import { Header } from './components/Header.tsx';
+import { Kanban } from './components/Kanban.tsx'
 
 export default function App() {
   return (
     <>
       <Header />
-      <div className={styles.wrapper}>
-        {/* <Kanban /> */}
-        {/* <Footer /> */}
-      </div>
+      <Kanban />
+      {/* <Footer /> */}
     </>
   )
 }
