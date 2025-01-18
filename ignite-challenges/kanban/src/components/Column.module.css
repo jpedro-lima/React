@@ -1,4 +1,5 @@
 
+
 header {
 	display: flex;
 	align-items: center;
@@ -31,9 +32,7 @@ header span {
 	flex-direction: column;
 	align-items: center;
 
-	width: 100%;
-	height: 30rem;
-
+	min-height: 32rem;
 
 	border: 1px solid var(--gray-400);
 	border-radius: 10px;
@@ -48,7 +47,7 @@ header span {
 	justify-content: center;
 
 	width: 100%;
-	height: 100%;
+	height: 30rem;
 }
 
 .empty .square {

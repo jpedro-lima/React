@@ -1,25 +1,42 @@
 import styles from './Column.module.css';
 import clipboard from '../assets/clipboard.svg';
 
-import { Card } from './Card';
+import { Card, Task } from './Card';
 
 interface ColumProps {
 	title: string,
-	isEmpty?: boolean,
-	createNewTask?: (task: string) => void
+	tasksList?: Task[],
+	deleteTaskofList: (id: string) => void,
+	updateTaskList: (id: string, status: 'backlog' | 'doing' | 'review' | 'done') => void
 };
 
-export function Column({ title, isEmpty = true }: ColumProps) {
+export function Column({ title, tasksList = [], deleteTaskofList, updateTaskList}: ColumProps) {
+
+	function handleDrop(event: React.DragEvent<HTMLDivElement>) {
+		event.preventDefault();
+		const id = event.dataTransfer.getData('text');
+
+		updateTaskList(id, title as 'backlog' | 'doing' | 'review' | 'done');
+	}
+
+	function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+		e.preventDefault();
+	}
+
+	function deleteTask(id: string) {
+		deleteTaskofList(id);
+	}
+
 	return (
 		<section className={styles.column}>
 			<header>
 				<h1>{title}</h1>
-				<span>0</span>
+				<span>{tasksList.length}</span>
 			</header>
 
-			<div className={styles.board}>
+			<div className={styles.board} onDragOver={handleDragOver} onDrop={handleDrop}	>
 
-				{isEmpty ?
+				{tasksList?.length === 0 ?
 					(
 						<div className={styles.empty}>
 							<div className={styles.square}></div>
@@ -28,8 +45,10 @@ export function Column({ title, isEmpty = true }: ColumProps) {
 							<p>Create tasks and organize your to-do items.</p>
 						</div>
 					) 
-					: <Card content='Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer.'/>
-				}
+					: tasksList.map((task : Task) => {
+							return <Card key={task.id} task={task} onDeleteTask={deleteTask} />
+						})
+					}
 
 			</div>
 
