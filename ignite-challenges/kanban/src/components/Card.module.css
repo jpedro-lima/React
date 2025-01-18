@@ -1,0 +1,36 @@
+.card {
+	display: grid;
+	grid-template-columns: 1fr 10%;
+	gap: 1rem;
+
+	width: 100%;
+	padding: 1rem;
+
+	background-color: var(--gray-500);
+	border-radius: 10px;
+
+}
+
+.card p {
+	color: var(--gray-100);
+
+	font-size: 0.9rem;
+}
+
+.card button {
+	color: var(--gray-300);
+
+	width: 2rem;
+	height: 2rem;
+
+	background: none;
+	border: none;
+	box-sizing: inherit;
+
+	cursor: pointer;
+	transition: filter 0.1s;
+}
+
+.card button:hover {
+	color: var(--danger);
+}
