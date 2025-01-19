@@ -9,18 +9,17 @@ import { v4 as uuid } from 'uuid';
 
 export function Kanban() {
 	const [taskList, setTasksList] = useState<Task[]>([]);
+	const [draggin, setDraggin] = useState(false);
+
+	const handleDragging = (dragging: boolean) => setDraggin(dragging);
 
 	const updateTaskList = (id: string, status: 'backlog' | 'doing' | 'review' | 'done') => {
-		const updatedTaskList = taskList.map(task => {
-			if (task.id === id) {
-				return {
-					...task,
-					status,
-				};
-			}
-			return task;
-		});
-		setTasksList(updatedTaskList);
+
+		const taskWithNewStatus = taskList.find(task => task.id === id);
+		if (!taskWithNewStatus) return;
+		taskWithNewStatus.status = status;
+
+		setTasksList([taskWithNewStatus, ...taskList.filter(task => task.id !== id)]);
 	};
 
 	const deleteTaskofList = (id: string) => {
@@ -69,6 +68,9 @@ export function Kanban() {
 										tasksList={taskList}
 										deleteTaskofList={deleteTaskofList}
 										updateTaskList={updateTaskList}
+
+										dragging={draggin}
+										handleDragging={handleDragging}
 									/>
 								);
 							})

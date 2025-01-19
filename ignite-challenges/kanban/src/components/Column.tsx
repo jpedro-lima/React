@@ -9,6 +9,9 @@ interface ColumProps {
 
 	deleteTaskofList: (id: string) => void,
 	updateTaskList: (id: string, status: 'backlog' | 'doing' | 'review' | 'done') => void,
+
+	dragging: boolean,
+	handleDragging: (dragging: boolean) => void,
 };
 
 export function Column(props : ColumProps) {
@@ -20,6 +23,7 @@ export function Column(props : ColumProps) {
 		const id = event.dataTransfer.getData('text');
 
 		props.updateTaskList(id, props.title.toLowerCase() as 'backlog' | 'doing' | 'review' | 'done');
+		props.handleDragging(false);
 	}
 
 	function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
@@ -38,7 +42,7 @@ export function Column(props : ColumProps) {
 			</header>
 
 			<div
-				className={styles.board}
+				className={`${styles.board} ${props.dragging ? styles.dragging : ''}`}
 				onDragOver={handleDragOver}
 				onDrop={handleDrop}
 				>
@@ -57,6 +61,8 @@ export function Column(props : ColumProps) {
 								key={task.id}
 								task={task}
 								onDeleteTask={deleteTask}
+								dragging={props.dragging}
+								handleDragging={props.handleDragging}
 								/>
 							)
 						})

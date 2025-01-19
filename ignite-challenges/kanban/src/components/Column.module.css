@@ -70,3 +70,7 @@ header span {
 
 	margin-bottom: 1rem;
 }
+
+.dragging {
+	border: 1px dashed var(--jaffar);
+}

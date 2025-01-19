@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from './Card.module.css';
 
 import { Trash } from 'phosphor-react';
@@ -12,22 +11,19 @@ export interface Task {
 interface CardProps {
 	task: Task,
 	onDeleteTask: (id: string) => void,
+
+	dragging: boolean,
+	handleDragging: (dragging: boolean) => void,
 }
 
-export function Card( { task , onDeleteTask} : CardProps ) {
-
-	const [dragging, setDragging] = useState(false);
-
-	const handleDragging = (dragging: boolean) => {
-		setDragging(dragging);
-	}
+export function Card( { task , onDeleteTask, dragging, handleDragging} : CardProps ) {
 
 	const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
 		e.dataTransfer.setData('text', `${task.id}`)
 		handleDragging(true);
 	}
 
-	function hundlerDeleteTask() {
+	function handlerDeleteTask() {
 		if (confirm('Would you like to delete this task?')) {
 			onDeleteTask(task.id);
 		}
@@ -42,7 +38,7 @@ export function Card( { task , onDeleteTask} : CardProps ) {
 			>
 			
 			<p>{task.content}</p>
-			<button onClick={hundlerDeleteTask}>
+			<button onClick={handlerDeleteTask}>
 				<Trash size={20} /> 
 			</button>
 		</article>
