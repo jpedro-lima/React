@@ -38,3 +38,7 @@
 .card button:hover {
 	color: var(--danger);
 }
+
+.dragging {
+	box-shadow: inset 0 0 0 2px var(--jaffar);
+}

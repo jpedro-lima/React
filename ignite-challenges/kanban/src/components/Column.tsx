@@ -5,17 +5,21 @@ import { Card, Task } from './Card';
 
 interface ColumProps {
 	title: string,
-	tasksList?: Task[],
+	tasksList: Task[],
+
 	deleteTaskofList: (id: string) => void,
-	updateTaskList: (id: string, status: 'backlog' | 'doing' | 'review' | 'done') => void
+	updateTaskList: (id: string, status: 'backlog' | 'doing' | 'review' | 'done') => void,
 };
 
-export function Column({ title, tasksList = [], deleteTaskofList, updateTaskList}: ColumProps) {
+export function Column(props : ColumProps) {
+
+	const tasks = props.tasksList.filter((task) => task.status === props.title.toLowerCase());
 
 	function handleDrop(event: React.DragEvent<HTMLDivElement>) {
 		event.preventDefault();
 		const id = event.dataTransfer.getData('text');
-		updateTaskList(id, title as 'backlog' | 'doing' | 'review' | 'done');
+
+		props.updateTaskList(id, props.title.toLowerCase() as 'backlog' | 'doing' | 'review' | 'done');
 	}
 
 	function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
@@ -23,19 +27,23 @@ export function Column({ title, tasksList = [], deleteTaskofList, updateTaskList
 	}
 
 	function deleteTask(id: string) {
-		deleteTaskofList(id);
+		props.deleteTaskofList(id);
 	}
 
 	return (
 		<section className={styles.column}>
 			<header>
-				<h1>{title}</h1>
-				<span>{tasksList.length}</span>
+				<h1>{props.title}</h1>
+				<span>{ tasks.length }</span>
 			</header>
 
-			<div className={styles.board} onDragOver={handleDragOver} onDrop={handleDrop}	>
+			<div
+				className={styles.board}
+				onDragOver={handleDragOver}
+				onDrop={handleDrop}
+				>
 
-				{tasksList?.length === 0 ?
+				{tasks.length === 0 ?
 					(
 						<div className={styles.empty}>
 							<div className={styles.square}></div>
@@ -44,8 +52,13 @@ export function Column({ title, tasksList = [], deleteTaskofList, updateTaskList
 							<p>Create tasks and organize your to-do items.</p>
 						</div>
 					) 
-					: tasksList.map((task : Task) => {
-							return <Card key={task.id} task={task} onDeleteTask={deleteTask} />
+					: tasks.map((task : Task) => {
+							return (<Card
+								key={task.id}
+								task={task}
+								onDeleteTask={deleteTask}
+								/>
+							)
 						})
 					}
 
