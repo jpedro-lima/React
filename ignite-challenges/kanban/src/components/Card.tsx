@@ -27,9 +27,10 @@ export function Card( { task , onDeleteTask} : CardProps ) {
 	}
 
 	return (
-		<article className={styles.card}
-			draggable
+		<article
+			className={styles.card}
 			onDragStart={handleDragStart}
+			draggable
 			>
 			
 			<p>{task.content}</p>

@@ -15,7 +15,6 @@ export function Column({ title, tasksList = [], deleteTaskofList, updateTaskList
 	function handleDrop(event: React.DragEvent<HTMLDivElement>) {
 		event.preventDefault();
 		const id = event.dataTransfer.getData('text');
-
 		updateTaskList(id, title as 'backlog' | 'doing' | 'review' | 'done');
 	}
 

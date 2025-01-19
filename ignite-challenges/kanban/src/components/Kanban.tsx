@@ -3,48 +3,63 @@ import styles from './Kanban.module.css';
 import { Task } from './Card';
 import { Column } from './Column';
 import { PlusCircle } from 'phosphor-react';
-import { FormEvent, useState, useEffect } from 'react';
+import { FormEvent, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 
-type ColumnsList = {
-		title: string;
-		fuckList: Task[];
-};
-
 export function Kanban() {
-
-	const [tasksList, setTasksList] = useState<Task[]>([]);
-	const [columns, setColumns] = useState<ColumnsList[]>([
-		{ title: 'Backlog', fuckList: [] },
-		{ title: 'Doing', fuckList: [] },
-		{ title: 'Review', fuckList: [] },
-		{ title: 'Done', fuckList: [] },
-	]);
-
-	useEffect(() => {
-			const newColumns = columns.map(column => {
-				console.log('column', column);
-				return {
-					...column,
-					fuckList: tasksList.filter(task => task.status == column.title.toLowerCase())
-				};
-			});
-			setColumns(newColumns);
-
-			// console.log('tasksList', tasksList);
-			// console.log('columns', columns);
-    }, [tasksList]);
+	const [backlogTasks, setBacklogTasks] = useState<Task[]>([]);
+	const [doingTasks, setDoingTasks] = useState<Task[]>([]);
+	const [reviewTasks, setReviewTasks] = useState<Task[]>([]);
+	const [doneTasks, setDoneTasks] = useState<Task[]>([]);
 	
 	const updateTaskList = (id: string, status: 'backlog' | 'doing' | 'review' | 'done') => {
-		setTasksList(prevTasks =>
-			prevTasks.map(task =>
-				task.id === id ? { ...task, status } : task
-			)
-		);
+		const tasksList = [...backlogTasks, ...doingTasks, ...reviewTasks, ...doneTasks];
+		const task = tasksList.find(task => task.id === id);
+
+		tasksList.splice(tasksList.indexOf(task as Task), 1);
+
+		if (task) {
+			let newTask = task;
+			newTask.status = status;
+			tasksList.push(newTask);
+
+			switch (status) {
+				case 'backlog':
+					setBacklogTasks(tasksList.filter(task => task.status === 'backlog'));
+					break;
+				case 'doing':
+					setDoingTasks(tasksList.filter(task => task.status === 'doing'));
+					break;
+				case 'review':
+					setReviewTasks(tasksList.filter(task => task.status === 'review'));
+					break;
+				case 'done':
+					setDoneTasks(tasksList.filter(task => task.status === 'done'));
+					break;
+			}
+
+		}
+		console.log(backlogTasks, doingTasks, reviewTasks, doneTasks);
 	};
 
 	const deleteTaskofList = (id: string) => {
-		setTasksList(prevTasks => prevTasks.filter(task => task.id !== id));
+		const tasksList = [...backlogTasks, ...doingTasks, ...reviewTasks, ...doneTasks];
+
+		const task = tasksList.find(task => task.id === id);
+		switch (task?.status) {
+			case 'backlog':
+				setBacklogTasks(backlogTasks.filter(task => task.id !== id));
+				break;
+			case 'doing':
+				setDoingTasks(doingTasks.filter(task => task.id !== id));
+				break;
+			case 'review':
+				setReviewTasks(reviewTasks.filter(task => task.id !== id));
+				break;
+			case 'done':
+				setDoneTasks(doneTasks.filter(task => task.id !== id));
+				break;
+		}
 	};
 
 	const handleSubmitNewTask = (event: FormEvent) => {
@@ -59,7 +74,7 @@ export function Kanban() {
 				content: value,
 				status: 'backlog',
 			};
-			setTasksList(prevTasks => [...prevTasks, newTask]);
+			setBacklogTasks([...backlogTasks, newTask]);
 			input.reset();
 		}
 	};
@@ -80,15 +95,30 @@ export function Kanban() {
 					</form>
 
 					<main className={styles.wrapper}>
-							{columns.map(column => (
-								<Column
-										key={column.title}
-										title={column.title}
-										tasksList={column.fuckList}
-										deleteTaskofList={deleteTaskofList}
-										updateTaskList={updateTaskList}
-								/>
-							))}
+						<Column
+								title={'Backlog'}
+								tasksList={backlogTasks}
+								deleteTaskofList={deleteTaskofList}
+								updateTaskList={updateTaskList}
+						/>
+						<Column
+								title={'Doing'}
+								tasksList={doingTasks}
+								deleteTaskofList={deleteTaskofList}
+								updateTaskList={updateTaskList}
+						/>
+						<Column
+								title={'Review'}
+								tasksList={reviewTasks}
+								deleteTaskofList={deleteTaskofList}
+								updateTaskList={updateTaskList}
+						/>
+						<Column
+								title={'Done'}
+								tasksList={doneTasks}
+								deleteTaskofList={deleteTaskofList}
+								updateTaskList={updateTaskList}
+						/>
 
 					</main>
 			</section>
