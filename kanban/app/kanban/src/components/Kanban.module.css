@@ -1,6 +1,6 @@
 .kanban {
 	max-width: 1280px;
-	margin: -1.75rem auto;
+	margin: -1.75rem auto 1rem;
 	
 	display: flex;
 	flex-direction: column;
