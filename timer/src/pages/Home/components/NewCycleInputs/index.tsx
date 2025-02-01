@@ -26,11 +26,7 @@ export function NewCycleInputs() {
 				value={formData.task}
 				disabled={activeCycle !== undefined}
 			/>
-			<datalist id="task-suggestions">
-				<option value="project 1"></option>
-				<option value="project 2"></option>
-				<option value="Banana"></option>
-			</datalist>
+			<datalist id="task-suggestions"></datalist>
 
 			<label htmlFor="minutesAmount">For:</label>
 			<MinutesAmountInput

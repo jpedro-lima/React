@@ -31,7 +31,7 @@ export function History() {
 									})}
 								</td>
 								<td>
-									<Status statusValue={cycle.status}>{cycle.status}</Status>
+									<Status $statusValue={cycle.status}>{cycle.status}</Status>
 								</td>
 							</tr>
 						))}

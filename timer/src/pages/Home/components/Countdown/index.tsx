@@ -6,7 +6,9 @@ import { CycleContext } from '../../../../contexts/CycleContext'
 export function CountDown() {
 	const { activeCycle, setActiveCycle, changeCycleStatus } = useContext(CycleContext)
 
-	const [timeLeft, setTimeLeft] = useState(0)
+	const [timeLeft, setTimeLeft] = useState(() =>
+		activeCycle ? differenceInSeconds(new Date(), activeCycle.startDate) : 0,
+	)
 
 	const totalSeconds = activeCycle ? activeCycle.time * 60 - timeLeft : 0
 
