@@ -8,10 +8,11 @@ import { GlobalStyle } from './styles/global.ts'
 export default function App() {
 	return (
 		<ThemeProvider theme={defaultTheme}>
+			<GlobalStyle />
+
 			<BrowserRouter>
 				<Router />
 			</BrowserRouter>
-			<GlobalStyle />
 		</ThemeProvider>
 	)
 }
