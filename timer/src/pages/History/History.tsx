@@ -1,6 +1,11 @@
+import { useContext } from 'react'
+import { CycleContext } from '../../contexts/CycleContext'
 import { HistoryContainer, HistoryList, Status } from './styles'
+import { formatDistanceToNow } from 'date-fns'
 
 export function History() {
+	const { cycles } = useContext(CycleContext)
+
 	return (
 		<HistoryContainer>
 			<h1>My history</h1>
@@ -16,46 +21,20 @@ export function History() {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>Task</td>
-							<td>20 minutes</td>
-							<td>Há dois meses</td>
-							<td>
-								<Status statusValue="done">Done</Status>
-							</td>
-						</tr>
-						<tr>
-							<td>Task</td>
-							<td>20 minutes</td>
-							<td>Há dois meses</td>
-							<td>
-								<Status statusValue="cancelled">Done</Status>
-							</td>
-						</tr>
-						<tr>
-							<td>Task</td>
-							<td>20 minutes</td>
-							<td>Há dois meses</td>
-							<td>
-								<Status statusValue="done">Done</Status>
-							</td>
-						</tr>
-						<tr>
-							<td>Task</td>
-							<td>20 minutes</td>
-							<td>Há dois meses</td>
-							<td>
-								<Status statusValue="done">Done</Status>
-							</td>
-						</tr>
-						<tr>
-							<td>Task</td>
-							<td>20 minutes</td>
-							<td>Há dois meses</td>
-							<td>
-								<Status statusValue="done">Done</Status>
-							</td>
-						</tr>
+						{cycles.map((cycle) => (
+							<tr key={cycle.id}>
+								<td>{cycle.task}</td>
+								<td>{cycle.time} minutes</td>
+								<td>
+									{formatDistanceToNow(cycle.startDate, {
+										addSuffix: true,
+									})}
+								</td>
+								<td>
+									<Status statusValue={cycle.status}>{cycle.status}</Status>
+								</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 			</HistoryList>

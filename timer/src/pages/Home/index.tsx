@@ -1,51 +1,26 @@
 import { HomeContainer, StartCountDownButton, StopCountDownButton } from './styles'
 
-import { createContext, useState } from 'react'
+import { useContext } from 'react'
 import { Play, Stop } from 'phosphor-react'
 import { z } from 'zod'
 import { NewCycleInputs } from './components/NewCycleInputs'
 import { CountDown } from './components/Countdown'
+import { Cycle, CycleContext } from '../../contexts/CycleContext'
 
 const validateFormSchema = z.object({
 	task: z.string().min(1, 'Task name is required'),
-	time: z.number().multipleOf(5).max(60, 'Time must be between 5 and 60 minutes'),
+	time: z.number().multipleOf(1).max(60, 'Time must be between 5 and 60 minutes'),
 })
 
-type Cycle = {
-	id: string
-	task: string
-	time: number
-	startDate: Date
-	status: 'completed' | 'interrupted' | 'active'
-}
-
-interface CycleContextData {
-	activeCycle: Cycle | undefined
-	setActiveCycle: (cycle: Cycle | undefined) => void
-
-	formData: { task: string; time: number }
-	setFormData: (data: { task: string; time: number }) => void
-
-	changeCycleStatus: (cycleId: string, status: 'completed' | 'interrupted') => void
-}
-
-export const CycleContext = createContext({} as CycleContextData)
-
 export function Home() {
-	const [formData, setFormData] = useState({ task: '', time: 0 })
-	const [cycles, setCycles] = useState<Cycle[]>([])
-	const [activeCycle, setActiveCycle] = useState<Cycle | undefined>()
-
-	function changeCycleStatus(cycleId: string, status: 'completed' | 'interrupted') {
-		setCycles((state) =>
-			state.map((cycle) => {
-				if (cycle.id === cycleId) {
-					return { ...cycle, status }
-				}
-				return cycle
-			}),
-		)
-	}
+	const {
+		createNewCycle,
+		activeCycle,
+		setActiveCycle,
+		formData,
+		setFormData,
+		changeCycleStatus,
+	} = useContext(CycleContext)
 
 	function hundleStopCountDown() {
 		changeCycleStatus(activeCycle!.id, 'interrupted')
@@ -72,27 +47,15 @@ export function Home() {
 			startDate: new Date(),
 			status: 'active',
 		}
-
+		createNewCycle(newCycle)
 		setFormData({ task: '', time: 0 })
-		setCycles((state) => [...state, newCycle])
-		setActiveCycle(newCycle)
 	}
 
 	return (
 		<HomeContainer>
 			<form onSubmit={hundleSubmitNewTask}>
-				<CycleContext.Provider
-					value={{
-						activeCycle,
-						setActiveCycle,
-						formData,
-						setFormData,
-						changeCycleStatus,
-					}}
-				>
-					<NewCycleInputs />
-					<CountDown />
-				</CycleContext.Provider>
+				<NewCycleInputs />
+				<CountDown />
 
 				{activeCycle ? (
 					<StopCountDownButton type="button" onClick={hundleStopCountDown}>

@@ -47,7 +47,7 @@ export const HistoryList = styled.div`
 			padding: 1rem;
 
 			color: ${(props) => props.theme['gray-100']};
-			font-size: 0.875rem;
+			font-size: 1rem;
 			line-height: 1.6;
 
 			&:first-child {
@@ -62,9 +62,9 @@ export const HistoryList = styled.div`
 	}
 `
 const STATUS_COLORS = {
-	done: 'green-500',
-	pending: 'yellow-500',
-	cancelled: 'red-500',
+	completed: 'green-500',
+	active: 'yellow-500',
+	interrupted: 'red-500',
 }
 
 interface StatusProps {
@@ -75,11 +75,12 @@ export const Status = styled.span<StatusProps>`
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
+	text-transform: capitalize;
 
 	&::before {
 		content: '';
-		width: 8px;
-		height: 8px;
+		width: 10px;
+		height: 10px;
 		border-radius: 50%;
 		background-color: ${(props) => props.theme[STATUS_COLORS[props.statusValue]]};
 	}
