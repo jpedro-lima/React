@@ -12,20 +12,21 @@ const validateFormSchema = z.object({
 })
 
 type Cycle = {
-	id?: string
+	id: string
 	task: string
 	time: number
 	startDate: Date
-	interrupted?: boolean
+	status: 'completed' | 'interrupted' | 'active'
 }
 
 interface CycleContextData {
-	cycles: Cycle[]
 	activeCycle: Cycle | undefined
 	setActiveCycle: (cycle: Cycle | undefined) => void
 
 	formData: { task: string; time: number }
 	setFormData: (data: { task: string; time: number }) => void
+
+	changeCycleStatus: (cycleId: string, status: 'completed' | 'interrupted') => void
 }
 
 export const CycleContext = createContext({} as CycleContextData)
@@ -35,15 +36,19 @@ export function Home() {
 	const [cycles, setCycles] = useState<Cycle[]>([])
 	const [activeCycle, setActiveCycle] = useState<Cycle | undefined>()
 
-	function hundleStopCountDown() {
+	function changeCycleStatus(cycleId: string, status: 'completed' | 'interrupted') {
 		setCycles((state) =>
 			state.map((cycle) => {
-				if (activeCycle && cycle.id === activeCycle.id) {
-					return { ...cycle, interrupted: true }
+				if (cycle.id === cycleId) {
+					return { ...cycle, status }
 				}
 				return cycle
 			}),
 		)
+	}
+
+	function hundleStopCountDown() {
+		changeCycleStatus(activeCycle!.id, 'interrupted')
 		setActiveCycle(undefined)
 	}
 
@@ -60,11 +65,12 @@ export function Home() {
 			return
 		}
 
-		const newCycle = {
+		const newCycle: Cycle = {
 			id: String(new Date().getTime()),
 			task: formData.task,
 			time: formData.time,
 			startDate: new Date(),
+			status: 'active',
 		}
 
 		setFormData({ task: '', time: 0 })
@@ -76,7 +82,13 @@ export function Home() {
 		<HomeContainer>
 			<form onSubmit={hundleSubmitNewTask}>
 				<CycleContext.Provider
-					value={{ cycles, activeCycle, setActiveCycle, formData, setFormData }}
+					value={{
+						activeCycle,
+						setActiveCycle,
+						formData,
+						setFormData,
+						changeCycleStatus,
+					}}
 				>
 					<NewCycleInputs />
 					<CountDown />

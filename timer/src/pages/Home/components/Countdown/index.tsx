@@ -4,7 +4,7 @@ import { CountDownContainer, Separator } from './styles'
 import { CycleContext } from '../..'
 
 export function CountDown() {
-	const { cycles, activeCycle, setActiveCycle } = useContext(CycleContext)
+	const { activeCycle, setActiveCycle, changeCycleStatus } = useContext(CycleContext)
 
 	const [timeLeft, setTimeLeft] = useState(0)
 
@@ -26,6 +26,7 @@ export function CountDown() {
 			const secondsDifference = differenceInSeconds(new Date(), activeCycle.startDate)
 
 			if (secondsDifference >= totalSeconds) {
+				changeCycleStatus(activeCycle.id, 'completed')
 				setActiveCycle(undefined)
 				setTimeLeft(0)
 			}
@@ -33,7 +34,7 @@ export function CountDown() {
 		}, 1000)
 
 		return () => clearInterval(interval)
-	}, [cycles, activeCycle])
+	}, [activeCycle])
 
 	useEffect(() => {
 		if (activeCycle) {
