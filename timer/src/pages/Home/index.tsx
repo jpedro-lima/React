@@ -22,7 +22,7 @@ type Cycle = {
 interface CycleContextData {
 	cycles: Cycle[]
 	activeCycle: Cycle | undefined
-	setActiveCycleId: (id: string | null) => void
+	setActiveCycle: (cycle: Cycle | undefined) => void
 
 	formData: { task: string; time: number }
 	setFormData: (data: { task: string; time: number }) => void
@@ -33,20 +33,18 @@ export const CycleContext = createContext({} as CycleContextData)
 export function Home() {
 	const [formData, setFormData] = useState({ task: '', time: 0 })
 	const [cycles, setCycles] = useState<Cycle[]>([])
-	const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
-
-	const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
+	const [activeCycle, setActiveCycle] = useState<Cycle | undefined>()
 
 	function hundleStopCountDown() {
-		setActiveCycleId(null)
 		setCycles((state) =>
 			state.map((cycle) => {
-				if (cycle.id === activeCycleId) {
+				if (activeCycle && cycle.id === activeCycle.id) {
 					return { ...cycle, interrupted: true }
 				}
 				return cycle
 			}),
 		)
+		setActiveCycle(undefined)
 	}
 
 	function hundleSubmitNewTask(event: React.FormEvent<HTMLFormElement>) {
@@ -71,14 +69,14 @@ export function Home() {
 
 		setFormData({ task: '', time: 0 })
 		setCycles((state) => [...state, newCycle])
-		setActiveCycleId(newCycle.id)
+		setActiveCycle(newCycle)
 	}
 
 	return (
 		<HomeContainer>
 			<form onSubmit={hundleSubmitNewTask}>
 				<CycleContext.Provider
-					value={{ cycles, activeCycle, setActiveCycleId, formData, setFormData }}
+					value={{ cycles, activeCycle, setActiveCycle, formData, setFormData }}
 				>
 					<NewCycleInputs />
 					<CountDown />
