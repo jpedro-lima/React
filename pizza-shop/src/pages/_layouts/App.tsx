@@ -2,9 +2,11 @@ import { Outlet } from 'react-router'
 
 export function AppLayout() {
 	return (
-		<div>
-			<h1>App Layout</h1>
-			<Outlet />
+		<div className="grid min-h-screen grid-cols-2">
+			<div className="h-full border-r border-foreground"></div>
+			<div>
+				<Outlet />
+			</div>
 		</div>
 	)
 }
