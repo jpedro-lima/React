@@ -15,7 +15,7 @@ export function AuthLayout() {
 				</footer>
 			</section>
 
-			<section className="flex h-full flex-col items-center justify-center">
+			<section className="relative flex h-full flex-col items-center justify-center">
 				<Outlet />
 			</section>
 		</div>

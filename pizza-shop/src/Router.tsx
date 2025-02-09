@@ -3,15 +3,17 @@ import { Signin } from './pages/auth/Signin'
 import { AppLayout } from './pages/_layouts/App'
 import { AuthLayout } from './pages/_layouts/Auth'
 import { Dashboard } from './pages/app/Dashboard'
+import { Signup } from './pages/auth/Signup'
 
 export function Router() {
 	return (
 		<Routes>
-			<Route path="/" element={<AppLayout />}>
+			<Route element={<AppLayout />}>
 				<Route path="/" element={<Dashboard />} />
 			</Route>
-			<Route path="/signin" element={<AuthLayout />}>
+			<Route element={<AuthLayout />}>
 				<Route path="/signin" element={<Signin />} />
+				<Route path="/signup" element={<Signup />} />
 			</Route>
 		</Routes>
 	)
