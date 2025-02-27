@@ -7,6 +7,8 @@ import { Helmet } from 'react-helmet-async'
 import { Link, useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { registerRestaurant } from '@/api/registerRestaurant'
 
 const SignUpSchema = z.object({
 	restaurantName: z.string(),
@@ -34,20 +36,29 @@ export function Signup() {
 		resolver: zodResolver(SignUpSchema),
 	})
 
-	async function handleSignup(data: SignUpForm) {
-		toast.success('Cadastro realizado com sucesso!', {
-			action: {
-				label: 'Login',
-				onClick: () => navigate('/signin'),
-			},
-		})
-		console.log(data)
+	const { mutateAsync: signup } = useMutation({ mutationFn: registerRestaurant })
 
-		await new Promise((resolve) => setTimeout(resolve, 2000))
+	async function handleSignup(data: SignUpForm) {
+		try {
+			await signup({
+				restaurantName: data.restaurantName,
+				managerName: data.managerName,
+				email: data.email,
+				phone: data.phone,
+			})
+
+			toast.success('Cadastro realizado com sucesso!', {
+				action: {
+					label: 'Login',
+					onClick: () => navigate(`/signin/?email=${data.email}`),
+				},
+			})
+		} catch (error) {
+			if (errors) toast.error('Cadastro não enviado')
+		}
 	}
 
 	const checkErrorsForm = () => {
-		console.log(errors)
 		Object.values(errors).forEach((error) => {
 			toast.error(error.message)
 		})

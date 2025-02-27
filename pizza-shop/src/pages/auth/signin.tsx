@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { signin } from '@/api/signin'
 
 const SignInSchema = z.object({
 	email: z.string().email().nonempty(),
@@ -16,18 +18,34 @@ type SignInForm = z.infer<typeof SignInSchema>
 
 //.regex(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])')),
 export function Signin() {
+	const [searchParams] = useSearchParams()
+
 	const {
 		register,
 		handleSubmit,
 		formState: { isSubmitting, errors },
 	} = useForm<SignInForm>({
 		resolver: zodResolver(SignInSchema),
+		defaultValues: {
+			email: searchParams.get('email') ?? '',
+		},
 	})
 
-	const handleSignin = async (data: SignInForm) => {
-		toast.success('E-mail enviado')
-		console.log(data)
-		await new Promise((resolve) => setTimeout(resolve, 2000))
+	const { mutateAsync: authenticate } = useMutation({ mutationFn: signin })
+
+	async function handleSignin(data: SignInForm) {
+		try {
+			await authenticate({ email: data.email })
+
+			toast.success('E-mail de autenticação enviado', {
+				action: {
+					label: 'Reenviar',
+					onClick: () => console.log('E-mail de autenticação reenviado'),
+				},
+			})
+		} catch {
+			toast.error('Credenciais invalidas')
+		}
 	}
 
 	const checkErrorsForm = () => {
