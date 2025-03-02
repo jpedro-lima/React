@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 
-interface GetProfileResponse {
+interface GetProfileResponseBody {
 	name: string
 	id: string
 	email: string
@@ -11,6 +11,6 @@ interface GetProfileResponse {
 }
 
 export async function getProfile() {
-	const response = await api.get<GetProfileResponse>('/me')
+	const response = await api.get<GetProfileResponseBody>('/me')
 	return response.data
 }
