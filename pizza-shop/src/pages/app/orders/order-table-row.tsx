@@ -3,16 +3,21 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { ArrowRight, Search, X } from 'lucide-react'
 import { OrderDetails } from './order-details'
+import { OrderStatus } from './order-status'
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
-export type OrderTableRowProps = {
-	id: string
-	createdAt: string
-	status: 'pending' | 'canceled' | 'processing' | 'delivering' | 'delivered'
-	clientName: string
-	total: string
+type OrderTableRowProps = {
+	order: {
+		orderId: string
+		createdAt: string
+		status: 'pending' | 'processing' | 'canceled' | 'delivered' | 'delivering'
+		customerName: string
+		total: number
+	}
 }
 
-export function OrderTableRow(props: OrderTableRowProps) {
+export function OrderTableRow({ order }: OrderTableRowProps) {
 	return (
 		<TableRow>
 			<TableCell>
@@ -28,20 +33,27 @@ export function OrderTableRow(props: OrderTableRowProps) {
 				</Dialog>
 			</TableCell>
 
-			<TableCell className="font-medium">{props.id}</TableCell>
+			<TableCell className="font-medium">{order.orderId}</TableCell>
 
-			<TableCell className="text-muted-foreground">{props.createdAt}</TableCell>
-
-			<TableCell>
-				<div className="flex items-center gap-2">
-					<span className="h-3 w-3 rounded-full bg-gray-700" />
-					<span className="font-medium text-muted-foreground">{props.status}</span>
-				</div>
+			<TableCell className="text-muted-foreground">
+				{formatDistanceToNow(new Date(order.createdAt), {
+					locale: ptBR,
+					addSuffix: true,
+				})}
 			</TableCell>
 
-			<TableCell className="font-medium">{props.clientName}</TableCell>
+			<TableCell>
+				<OrderStatus status={order.status} />
+			</TableCell>
 
-			<TableCell className="font-medium">{props.total}</TableCell>
+			<TableCell className="font-medium">{order.customerName}</TableCell>
+
+			<TableCell className="font-medium">
+				{order.total.toLocaleString('pt-BR', {
+					style: 'currency',
+					currency: 'BRL',
+				})}
+			</TableCell>
 
 			<TableCell>
 				<Button variant="outline" size="sm" className="hover:border-green-700">
