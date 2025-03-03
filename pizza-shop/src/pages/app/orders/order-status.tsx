@@ -15,7 +15,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
 const orderStatusColorMap: Record<OrderStatus, string> = {
 	pending: 'bg-gray-700',
 	processing: 'bg-yellow-500',
-	canceled: 'bg-rose-500',
+	canceled: 'bg-destructive',
 	delivered: 'bg-emerald-500',
 	delivering: 'bg-orange-700',
 }
