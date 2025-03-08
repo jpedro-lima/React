@@ -1,17 +1,11 @@
+import { getPopularProducts } from '@/api/get-popularproducts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 
 import { ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts'
 
 import colors from 'tailwindcss/colors'
-
-const data = [
-	{ product: 'Pepperoni', amount: 35 },
-	{ product: 'Mussarela', amount: 48 },
-	{ product: 'Chicken and chease sllalsallslaslas', amount: 22 },
-	{ product: 'Marguerita', amount: 18 },
-	{ product: '4 cheases', amount: 31 },
-]
 
 const COLORS = [
 	colors.sky[700],
@@ -29,16 +23,15 @@ type RenderActiveShapeProps = {
 	startAngle: number
 	endAngle: number
 	fill: string
-	payload: (typeof data)[0]
+	payload: { product: string; amount: number }
 } & any
 
 const renderActiveShape = (props: RenderActiveShapeProps) => {
 	const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props
-	const theme = localStorage.getItem('pizza-shop-theme') || 'light'
 
 	return (
 		<g>
-			<text x={cx} y={cy} dy={132} textAnchor="middle" fill={fill}>
+			<text x={cx} y={cy} dy={135} textAnchor="middle" fill={fill}>
 				{payload.product}
 			</text>
 			<Sector
@@ -66,7 +59,7 @@ const renderActiveShape = (props: RenderActiveShapeProps) => {
 				dy={8}
 				textAnchor="middle"
 				fontSize={'1.2rem'}
-				fill={theme === 'dark' ? colors.gray[300] : colors.gray[700]}
+				fill={fill}
 			>{`${payload.amount}`}</text>
 		</g>
 	)
@@ -74,6 +67,11 @@ const renderActiveShape = (props: RenderActiveShapeProps) => {
 
 export function PopularProductsChart() {
 	const [activeIndex, setActiveIndex] = useState(0)
+
+	const { data: popularProducts } = useQuery({
+		queryKey: ['metrics', 'popular-products'],
+		queryFn: getPopularProducts,
+	})
 
 	return (
 		<Card className="lg:col-span-3">
@@ -84,28 +82,30 @@ export function PopularProductsChart() {
 			</CardHeader>
 
 			<CardContent>
-				<ResponsiveContainer height={300} width="100%">
-					<PieChart>
-						<Pie
-							activeIndex={activeIndex}
-							activeShape={renderActiveShape}
-							onMouseEnter={(_, index) => setActiveIndex(index)}
-							data={data}
-							dataKey="amount"
-							nameKey="product"
-							cx="50%"
-							cy="50%"
-							outerRadius={100}
-							innerRadius={80}
-							paddingAngle={5}
-							strokeWidth={0}
-						>
-							{data.map((_, index) => (
-								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-							))}
-						</Pie>
-					</PieChart>
-				</ResponsiveContainer>
+				{popularProducts && (
+					<ResponsiveContainer height={300} width="100%">
+						<PieChart>
+							<Pie
+								activeIndex={activeIndex}
+								activeShape={renderActiveShape}
+								onMouseEnter={(_, index) => setActiveIndex(index)}
+								data={popularProducts}
+								dataKey="amount"
+								nameKey="product"
+								cx="50%"
+								cy="50%"
+								outerRadius={100}
+								innerRadius={75}
+								paddingAngle={5}
+								strokeWidth={0}
+							>
+								{popularProducts.map((_, index) => (
+									<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+								))}
+							</Pie>
+						</PieChart>
+					</ResponsiveContainer>
+				)}
 			</CardContent>
 		</Card>
 	)
