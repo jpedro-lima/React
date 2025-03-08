@@ -6,7 +6,7 @@ import { AccountMenu } from './account-menu'
 
 export function Header() {
 	const navStyle =
-		'flex items-center gap-1.5 text-md font-medium text-muted-foreground p-4 hover:underline hover:underline-offset-[8px]'
+		'flex h items-center gap-1.5 text-md font-medium text-muted-foreground p-4 hover:underline hover:underline-offset-[8px]'
 	const activeNavStyle = navStyle + ' text-primary'
 
 	return (
@@ -25,12 +25,12 @@ export function Header() {
 
 				<nav className="flex items-center space-x-4 lg:space-x-6">
 					<NavLink
-						to="/"
-						title="Home"
+						to="/dashboard"
+						title="dashboard"
 						className={({ isActive }) => (isActive ? activeNavStyle : navStyle)}
 					>
 						<Home className="h-4 w-4" />
-						Início
+						Dashboard
 					</NavLink>
 
 					<NavLink
