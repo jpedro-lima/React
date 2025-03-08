@@ -11,8 +11,8 @@ export function Router() {
 	return (
 		<Routes>
 			<Route element={<AppLayout />}>
-				<Route path="/" element={<Dashboard />} />
-				<Route path="/home" element={<p>home</p>} />
+				<Route path="/" element={<div />} />
+				<Route path="/dashboard" element={<Dashboard />} />
 				<Route path="/orders" element={<Orders />} />
 			</Route>
 
